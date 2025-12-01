@@ -1,0 +1,23 @@
+{
+  "name": "avdesempenho",
+  "version": "1.0.0",
+  "description": "AVALIAÇÃO DE DESEMPENHO",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/walderisousa/EXERCICIOAVALIA-ODESEMPENHO.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/walderisousa/EXERCICIOAVALIA-ODESEMPENHO/issues"
+  },
+  "homepage": "https://github.com/walderisousa/EXERCICIOAVALIA-ODESEMPENHO#readme",
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

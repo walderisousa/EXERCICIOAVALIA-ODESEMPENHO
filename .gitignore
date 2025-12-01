@@ -1,0 +1,22 @@
+# Dependências
+node_modules/
+
+# Código compilado
+dist/
+
+# Logs e caches
+*.log
+*.cache
+
+# Arquivos temporários do editor (vim, vscode, etc)
+*.swp
+.vscode/
+.idea/
+
+# Ignorar JSONs temporários específicos (adicione os nomes que precisar)
+config-temporario.json
+local-settings.json
+
+# Ignore outros arquivos JSON temporários se quiser
+# *.temp.json
+# *.local.json
