@@ -1,35 +1,44 @@
-const readline = require("readline");
 
-function input(prompt: string, min: number = 1, max: number = 10): Promise<number> {
-    const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout
-    });
+const prompt = require("prompt-sync")();
 
+let desempenhoAvaliacaoGestor: number;
+let potencialAvaliacaoGestor: number;
+let pesoGestor = 7;
+
+let desempenhoAvaliacaoColaborador: number;
+let potencialAvaliacaoColaborador: number;
+let pesoColaborador = 3;
+
+function input(mensagem: string, min: number = 1, max: number = 5): Promise<number> {
     return new Promise((resolve) => {
-        const pergunta = () => {
-            rl.question(prompt, (answer: string) => {
-                const num = Number(answer.trim());
-                if (!isNaN(num) && num >= min && num <= max) {
-                    rl.close();
-                    resolve(num);
-                } else {
-                    console.log(`Por favor, digite um número entre ${min} e ${max}.`);
-                    pergunta();
-                }
-            });
+        const perguntar = () => {
+            const answer = prompt(mensagem);
+            const num = Number(answer.trim());
+
+            if (!isNaN(num) && num >= min && num <= max) {
+                resolve(num);
+            } else {
+                console.log(`Por favor, digite um número entre ${min} e ${max}.`);
+                perguntar();
+            }
         };
-        pergunta();
+
+        perguntar();
     });
 }
 
-async function avaliacao() {
-    console.log("Avalie o colaborador em cada questão, sendo 1 a nota mais baixa e 10 a mais alta.");
+async function avaliacaoGestor() {
+    console.log(`Avalie o colaborador em cada questão de 1 a 5,sendo:
+         1-Discordo totalmente.
+         2-Discordo parcialmente.
+         3-Não concordo, nem discordo.
+         4-Concordo parcialmente.
+         5-Concordo totalmente.`);
     const pergunta1 : number = await input("O colaborador atinge as metas e objetivos estabelecidos?");
     const pergunta2 : number = await input("O desempenho é consistente e está acima das expectativas?");
     const pergunta3 : number = await input("Ele entrega o trabalho com qualidade e no prazo?");
     const pergunta4 : number = await input("O profissional demonstra organização e iniciativa em suas tarefas?");
-    const pergunta5 : number = await input("Ele lida bem com os desafios e situações inesperadas? ");
+    const pergunta5 : number = await input("Ele lida bem com os desafios e situações inesperadas?");
     const pergunta6 : number = await input("O colaborador demonstra disposição para aprender e crescer?");
     const pergunta7 : number = await input("Ele busca ativamente oportunidades de desenvolvimento profissional?");
     const pergunta8 : number = await input("Ele se mostra motivado e engajado com a missão da equipe e da empresa? ");
@@ -37,10 +46,45 @@ async function avaliacao() {
     const pergunta10 : number = await input("Demonstra potencial de liderança, como aptidão ou desejo de assumir posições de liderança?");
 
     
-    const desempenho = ((pergunta1+pergunta2+pergunta3+pergunta4+pergunta5) / 5);
-    const potencial = ((pergunta6+pergunta7+pergunta8+pergunta9+pergunta10) / 5);
+    desempenhoAvaliacaoGestor = ((pergunta1+pergunta2+pergunta3+pergunta4+pergunta5) / 5);
+    potencialAvaliacaoGestor = ((pergunta6+pergunta7+pergunta8+pergunta9+pergunta10) / 5);
+    pesoGestor = 6;
 
-    if(potencial >= 7 && desempenho >= 7){
+}
+
+async function avaliacaoColaborador() {
+    console.log(`Avalie a si mesmo em cada questão de 1 a 5,sendo:
+         1-Discordo totalmente.
+         2-Discordo parcialmente.
+         3-Não concordo, nem discordo.
+         4-Concordo parcialmente.
+         5-Concordo totalmente.`);
+    const pergunta1 : number = await input("Estou atingindo as metas e objetivos estabelecidos?");
+    const pergunta2 : number = await input("Meu desempenho é consistente e está acima das expectativas?");
+    const pergunta3 : number = await input("Estou entregando o trabalho com qualidade e no prazo?");
+    const pergunta4 : number = await input("Demonstro organização e iniciativa em suas tarefas?");
+    const pergunta5 : number = await input("Estou lidando bem com os desafios e situações inesperadas?");
+    const pergunta6 : number = await input("Tenho disposição para aprender e crescer?");
+    const pergunta7 : number = await input("Estou buscando ativamente oportunidades de desenvolvimento profissional?");
+    const pergunta8 : number = await input("Me mantenho motivado e engajado com a missão da equipe e da empresa? ");
+    const pergunta9 : number = await input("Sou receptivo a feedback e os aplica em meu trabalho?");
+    const pergunta10 : number = await input("Demonstro potencial de liderança, como aptidão ou desejo de assumir posições de liderança?");
+
+    
+    desempenhoAvaliacaoColaborador = ((pergunta1+pergunta2+pergunta3+pergunta4+pergunta5) / 5);
+    potencialAvaliacaoColaborador = ((pergunta6+pergunta7+pergunta8+pergunta9+pergunta10) / 5);
+    pesoColaborador = 4;
+}
+
+
+async function calcularNinebox(){
+    await avaliacaoGestor();
+    await avaliacaoColaborador();
+
+    const desempenho = ((desempenhoAvaliacaoGestor * pesoGestor) + (desempenhoAvaliacaoColaborador * pesoColaborador)) / (pesoGestor + pesoColaborador);
+    const potencial = ((potencialAvaliacaoGestor * pesoGestor) + (potencialAvaliacaoColaborador * pesoColaborador)) / (pesoGestor + pesoColaborador);
+
+    if(potencial >=3.66 && desempenho >=3.66){
         console.log(`
                 |============|============|============|
     Potencial   |            |            |Sua Posição |
@@ -55,7 +99,7 @@ async function avaliacao() {
                 Desempenho   Desempenho    Desempenho
                 Baixo        Médio         Alto
         `);
-        } else if(potencial >=7 && desempenho >=4 && desempenho < 7){
+        } else if(potencial >=3.66 && desempenho >=2.33 && desempenho <3.66){
              console.log(`
                 |============|============|============|
     Potencial   |            |Sua Posição |            |
@@ -70,7 +114,7 @@ async function avaliacao() {
                 Desempenho   Desempenho    Desempenho
                 Baixo        Médio         Alto
         `);
-        } else if(potencial > 7 && desempenho < 4){
+        } else if(potencial >3.66 && desempenho <2.33){
              console.log(`
                 |============|============|============|
     Potencial   |Sua Posição |            |            |
@@ -84,7 +128,7 @@ async function avaliacao() {
                 |============|============|============|
                 Desempenho   Desempenho    Desempenho
                 Baixo        Médio         Alto
-        `)} else if(potencial < 7 && potencial >=4 && desempenho >= 7){
+        `)} else if(potencial < 3.66 && potencial >=2.33 && desempenho >=3.66){
         console.log(`
                 |============|============|============|
     Potencial   |            |            |            |
@@ -99,7 +143,7 @@ async function avaliacao() {
                 Desempenho   Desempenho    Desempenho
                 Baixo        Médio         Alto
         `);
-        } else if(potencial < 7 && potencial >=4 && desempenho < 7 && desempenho >= 4){
+        } else if(potencial < 3.66 && potencial >=2.33 && desempenho < 3.66 && desempenho >= 2.33){
              console.log(`
                 |============|============|============|
     Potencial   |            |            |            |
@@ -114,7 +158,7 @@ async function avaliacao() {
                 Desempenho   Desempenho    Desempenho
                 Baixo        Médio         Alto
         `);
-        } else if(potencial < 7 && potencial >=4 && desempenho < 4){
+        } else if(potencial < 3.66 && potencial >=2.33 && desempenho < 2.33){
              console.log(`
                 |============|============|============|
     Potencial   |            |            |            |
@@ -128,7 +172,7 @@ async function avaliacao() {
                 |============|============|============|
                 Desempenho   Desempenho    Desempenho
                 Baixo        Médio         Alto
-        `);} else if(potencial < 4 && desempenho >= 7){
+        `);} else if(potencial < 2.33 && desempenho >= 3.66){
         console.log(`
                 |============|============|============|
     Potencial   |            |            |            |
@@ -143,7 +187,7 @@ async function avaliacao() {
                 Desempenho   Desempenho    Desempenho
                 Baixo        Médio         Alto
         `);
-        } else if(potencial <4 && desempenho >=4 && desempenho < 7){
+        } else if(potencial <2.33 && desempenho >=2.33 && desempenho < 3.66){
              console.log(`
                 |============|============|============|
     Potencial   |            |            |            |
@@ -158,7 +202,7 @@ async function avaliacao() {
                 Desempenho   Desempenho    Desempenho
                 Baixo        Médio         Alto
         `);
-        } else if(potencial < 7 && desempenho < 4){
+        } else if(potencial < 3.66 && desempenho < 2.33){
              console.log(`
                 |============|============|============|
     Potencial   |            |            |            |
@@ -174,10 +218,6 @@ async function avaliacao() {
                 Baixo        Médio         Alto
         `)}
 
-
-
 }
-
-avaliacao();
-
+calcularNinebox()
 
